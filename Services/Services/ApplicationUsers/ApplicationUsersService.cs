@@ -1,24 +1,13 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Services.Models.ApplicationUsers;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Services.Services.ApplicationUsers
 {
-    public class ApplicationUsersService
+    public class ApplicationUsersService : BaseService<ApplicationUser>
     {
-        private IRepository<ApplicationUser> Repository;
-        private IMapper Mapper;
-
-        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper)
-        {
-            Repository = repository;
-            Mapper = mapper;
-        }
+        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper) : base(repository, mapper) { }
 
         public string Test()
         {
