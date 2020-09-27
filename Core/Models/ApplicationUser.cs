@@ -11,6 +11,7 @@ namespace Core.Models
         /// Navigation property for the claims this user possesses.
         /// </summary>
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+        public string Login { get; set; }
         public string UserType { get; set; }
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
