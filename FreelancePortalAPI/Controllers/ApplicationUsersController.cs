@@ -27,13 +27,6 @@ namespace FreelancePortalAPI.Controllers
             Mapper = mapper;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<string>> Test()
-        {
-            return Ok(ApplicationUsersService.Test());
-        }
-
-
         [HttpPost("create")]
         public async Task<ActionResult<ViewModel>> Create([FromBody]CreateModel createModel)
         {

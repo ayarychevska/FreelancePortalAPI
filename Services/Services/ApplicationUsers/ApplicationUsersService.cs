@@ -1,25 +1,71 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Services.Models.ApplicationUsers;
+using Services.Models.Login;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace Services.Services.ApplicationUsers
 {
     public class ApplicationUsersService : BaseService<ApplicationUser>
     {
-        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper) : base(repository, mapper) { }
+        private readonly IConfiguration Configuration;
 
-        public string Test()
+        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper, IConfiguration configuration) : base(repository, mapper)
         {
-            return "Denis";
+            Configuration = configuration;
         }
 
         public ApplicationUser Create(CreateModel createModel)
         {
             ApplicationUser applicationUser = Mapper.Map<ApplicationUser>(createModel);
+            applicationUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(createModel.Password);
 
             var result = Repository.Add(applicationUser);
             return result;
+        }
+
+        public string GenerateJWTToken(ApplicationUser userInfo)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
+                new Claim("fullName", userInfo.UserName.ToString()),
+                new Claim("role", userInfo.UserType),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            };
+
+            var token = new JwtSecurityToken(
+                issuer: Configuration["Jwt:Issuer"],
+                audience: Configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: credentials
+                );
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public ApplicationUser AuthenticateUser(UserModel loginCredentials)
+        {
+            var user = Repository.GetSingleOrDefault(x => x.Login == loginCredentials.Login);
+
+            if (user == null)
+            {
+                throw new NullReferenceException();
+            }
+            else if (!BCrypt.Net.BCrypt.Verify(loginCredentials.Password, user.PasswordHash))
+            {
+                throw new ArgumentException();
+            }
+
+            return user;
         }
     }
 }

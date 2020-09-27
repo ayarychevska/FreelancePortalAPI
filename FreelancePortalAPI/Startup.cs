@@ -14,6 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services.Services.ApplicationUsers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using FreelancePortalAPI.Auth;
 
 namespace FreelancePortalAPI
 {
@@ -49,6 +53,31 @@ namespace FreelancePortalAPI
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen();
+
+            // JWT Auth
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"])),
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
+
+            services.AddAuthorization(config =>
+            {
+                config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
+                config.AddPolicy(Policies.User, Policies.UserPolicy());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -62,6 +91,8 @@ namespace FreelancePortalAPI
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

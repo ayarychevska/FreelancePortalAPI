@@ -14,7 +14,9 @@ namespace FreelancePortalAPI.Helpers
         {
             //ApplicationUser mappings
             CreateMap<ApplicationUser, CreateModel>()
-                .ForMember(d => d.Name, s => s.MapFrom(m => m.UserName));
+                .ForMember(d => d.Name, s => s.MapFrom(m => m.UserName))
+                .ForMember(d => d.Password, s => s.Ignore());
+
             CreateMap<CreateModel, ApplicationUser>()
                 .ForMember(d => d.UserName, s => s.MapFrom(m => m.Name));
 
