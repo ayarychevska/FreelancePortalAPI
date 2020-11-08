@@ -18,6 +18,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using FreelancePortalAPI.Auth;
+using Services.Services.Subjects;
+using Services.Services.Appointments;
 
 namespace FreelancePortalAPI
 {
@@ -50,9 +52,14 @@ namespace FreelancePortalAPI
             services.AddScoped<DbContext, PortalContext>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped<ApplicationUsersService, ApplicationUsersService>();
+            services.AddScoped<SubjectsService, SubjectsService>();
+            services.AddScoped<AppointmentsService, AppointmentsService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(x => x.FullName);
+            });
 
             // JWT Auth
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

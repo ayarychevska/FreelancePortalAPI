@@ -30,6 +30,15 @@ namespace Services.Services.ApplicationUsers
             return result;
         }
 
+        public ApplicationUser Update(CreateModel createModel)
+        {
+            var baseEntity = Repository.GetSingleOrDefault(x => x.Id == createModel.Id); 
+            ApplicationUser applicationUser = Mapper.Map(createModel, baseEntity);
+
+            var result = Repository.Update(applicationUser);
+            return result;
+        }
+
         public string GenerateJWTToken(ApplicationUser userInfo)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecretKey"]));

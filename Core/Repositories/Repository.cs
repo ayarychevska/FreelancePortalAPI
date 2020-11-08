@@ -48,6 +48,7 @@ namespace Core.Repositories
         public virtual void Remove(TEntity entity)
         {
             _entities.Remove(entity);
+            _context.SaveChanges();
         }
 
         public virtual void RemoveRange(IEnumerable<TEntity> entities)

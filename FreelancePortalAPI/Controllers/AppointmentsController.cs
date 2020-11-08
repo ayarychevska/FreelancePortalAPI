@@ -7,6 +7,7 @@ using Core.Models;
 using Core.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services.Models.Appointments;
 using Services.Services.Appointments;
 
 namespace FreelancePortalAPI.Controllers
@@ -17,13 +18,54 @@ namespace FreelancePortalAPI.Controllers
     {
         private IMapper Mapper;
         private IRepository<Appointment> Repository { get; }
-        private AppointmentsService ApplicationUsersService { get; }
+        private AppointmentsService AppointmentsService { get; }
 
-        public AppointmentsController(IRepository<Appointment> repository, AppointmentsService applicationUsersService, IMapper mapper)
+        public AppointmentsController(IRepository<Appointment> repository, AppointmentsService appointmentsService, IMapper mapper)
         {
             Repository = repository;
-            ApplicationUsersService = applicationUsersService;
+            AppointmentsService = appointmentsService;
             Mapper = mapper;
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<ViewModel>> Create([FromBody] CreateModel createModel)
+        {
+            var result = AppointmentsService.Create(createModel);
+
+            ViewModel appointmentViewModel = Mapper.Map<ViewModel>(result);
+
+            return Ok(appointmentViewModel);
+        }
+
+        [HttpGet("list")]
+        public async Task<ActionResult<List<ViewModel>>> GetAppointments()
+        {
+            var appointments = Repository.GetAll();
+
+            return Ok(Mapper.Map<List<ViewModel>>(appointments));
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<ViewModel>> Update([FromBody] CreateModel createModel)
+        {
+            var result = AppointmentsService.Update(createModel);
+
+            ViewModel appointmentViewModel = Mapper.Map<ViewModel>(result);
+
+            return Ok(appointmentViewModel);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete([FromRoute] long id)
+        {
+            var appointment = Repository.GetSingleOrDefault(x => x.Id == id);
+            if (appointment == null)
+            {
+                return NotFound();
+            }
+
+            Repository.Remove(appointment);
+            return Ok();
         }
     }
 }

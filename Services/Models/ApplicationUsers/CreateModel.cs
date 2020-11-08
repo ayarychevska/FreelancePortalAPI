@@ -7,6 +7,7 @@ namespace Services.Models.ApplicationUsers
 {
     public class CreateModel
     {
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Login { get; set; }
         public string Email { get; set; }
@@ -15,5 +16,6 @@ namespace Services.Models.ApplicationUsers
         public string Gender { get; set; }
         public string Description { get; set; }
         public string Password { get; set; }
+        public string RepeatPassword { get; set; }
     }
 }
