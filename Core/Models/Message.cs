@@ -1,6 +1,7 @@
 ﻿using Core.Models.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace Core.Models
@@ -11,7 +12,11 @@ namespace Core.Models
         public DateTime DateTimeSendedUTC { get; set; }
         public string Text { get; set; }
         public int Status { get; set; }
+        [ForeignKey("Sender")]
+        public string SenderId { get; set; }
         public ApplicationUser Sender { get; set; }
+        [ForeignKey("Receiver")]
+        public string ReceiverId { get; set; }
         public ApplicationUser Receiver { get; set; }
 
         /// <summary>

@@ -4,14 +4,16 @@ using Core;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Core.Migrations
 {
     [DbContext(typeof(PortalContext))]
-    partial class PortalContextModelSnapshot : ModelSnapshot
+    [Migration("20201212231726_addingIdsPost")]
+    partial class addingIdsPost
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -121,7 +123,7 @@ namespace Core.Migrations
                     b.Property<string>("StudentId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<long>("SubjectId")
+                    b.Property<long?>("SubjectId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("TeacherId")
@@ -206,13 +208,13 @@ namespace Core.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<long>("SubjectId")
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("int");
+
+                    b.Property<long?>("SubjectId1")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Text")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UpdatedBy")
@@ -226,7 +228,7 @@ namespace Core.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectId1");
 
                     b.HasIndex("UserId");
 
@@ -310,7 +312,7 @@ namespace Core.Migrations
                         .HasColumnType("bigint")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<long>("SubjectId")
+                    b.Property<long?>("SubjectId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("UserId")
@@ -359,9 +361,7 @@ namespace Core.Migrations
 
                     b.HasOne("Core.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
 
                     b.HasOne("Core.Models.ApplicationUser", "Teacher")
                         .WithMany()
@@ -383,9 +383,7 @@ namespace Core.Migrations
                 {
                     b.HasOne("Core.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId1");
 
                     b.HasOne("Core.Models.ApplicationUser", "User")
                         .WithMany()
@@ -407,9 +405,7 @@ namespace Core.Migrations
                 {
                     b.HasOne("Core.Models.Subject", "Subject")
                         .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SubjectId");
 
                     b.HasOne("Core.Models.ApplicationUser", "User")
                         .WithMany()
