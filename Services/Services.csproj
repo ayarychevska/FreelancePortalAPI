@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Messages\" />
-    <Folder Include="Models\Posts\" />
     <Folder Include="Models\Reviews\" />
   </ItemGroup>
 

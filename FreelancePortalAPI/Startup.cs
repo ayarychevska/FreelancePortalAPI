@@ -1,4 +1,4 @@
-using AutoMapper;
+﻿using AutoMapper;
 using Core;
 using Core.Models;
 using System;
@@ -20,6 +20,9 @@ using System.Text;
 using FreelancePortalAPI.Auth;
 using Services.Services.Subjects;
 using Services.Services.Appointments;
+using Services.Services.Posts;
+using Services.Services.Reviews;
+using Services.Services.Messages;
 
 namespace FreelancePortalAPI
 {
@@ -47,6 +50,7 @@ namespace FreelancePortalAPI
             services.AddDbContext<PortalContext>(opts => opts.UseSqlServer(Configuration["ConnectionString:FreelancePortalApiDB"]));
 
             services.AddControllers();
+            services.AddCors();
 
             //services.AddScoped<IRepository<ApplicationUser>, Repository<ApplicationUser>>();
             services.AddScoped<DbContext, PortalContext>();
@@ -54,6 +58,9 @@ namespace FreelancePortalAPI
             services.AddScoped<ApplicationUsersService, ApplicationUsersService>();
             services.AddScoped<SubjectsService, SubjectsService>();
             services.AddScoped<AppointmentsService, AppointmentsService>();
+            services.AddScoped<PostsService, PostsService>();
+            services.AddScoped<ReviewsService, ReviewsService>();
+            services.AddScoped<MessagesService, MessagesService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(options =>
@@ -99,6 +106,9 @@ namespace FreelancePortalAPI
 
             app.UseRouting();
 
+            // подключаем CORS
+            app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
             app.UseAuthentication();
 
             app.UseAuthorization();
@@ -117,6 +127,7 @@ namespace FreelancePortalAPI
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FreelancePortalAPI");
             });
+
         }
     }
 }

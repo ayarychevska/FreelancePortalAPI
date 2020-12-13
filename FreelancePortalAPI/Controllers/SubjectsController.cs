@@ -38,7 +38,7 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<SubjectModel>>> GetUsers()
+        public async Task<ActionResult<List<SubjectModel>>> GetSubjects()
         {
             var subjects = Repository.GetAll();
 

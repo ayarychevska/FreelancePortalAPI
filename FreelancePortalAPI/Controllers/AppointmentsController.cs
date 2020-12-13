@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using FreelancePortalAPI.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models.Appointments;
@@ -12,6 +14,7 @@ using Services.Services.Appointments;
 
 namespace FreelancePortalAPI.Controllers
 {
+    [Authorize/*(Policy = Policies.Admin)*/]
     [Route("api/[controller]")]
     [ApiController]
     public class AppointmentsController : ControllerBase

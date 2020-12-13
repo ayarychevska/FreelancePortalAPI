@@ -29,6 +29,14 @@ namespace FreelancePortalAPI.Helpers
             CreateMap<Subject, SubjectModel>();
             CreateMap<SubjectModel, Subject>();
 
+
+            //Posts mappings
+            CreateMap<Post, Services.Models.Posts.CreateModel>();
+
+            CreateMap<Services.Models.Posts.CreateModel, Post>()
+                .ForMember(d => d.User, s => s.Ignore())
+                .ForMember(d => d.Subject, s => s.Ignore());
+
         }
     }
 }
