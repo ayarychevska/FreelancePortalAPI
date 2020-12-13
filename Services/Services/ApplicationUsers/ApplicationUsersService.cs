@@ -24,6 +24,7 @@ namespace Services.Services.ApplicationUsers
         public ApplicationUser Create(CreateModel createModel)
         {
             ApplicationUser applicationUser = Mapper.Map<ApplicationUser>(createModel);
+
             applicationUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(createModel.Password);
 
             var result = Repository.Add(applicationUser);
@@ -36,6 +37,19 @@ namespace Services.Services.ApplicationUsers
             ApplicationUser applicationUser = Mapper.Map(createModel, baseEntity);
 
             var result = Repository.Update(applicationUser);
+            return result;
+        }
+
+        public ApplicationUser ChangePassword(ChangePasswordModel changePasswordModel)
+        {
+            var baseEntity = Repository.GetSingleOrDefault(x => x.Id == changePasswordModel.Id);
+
+            if (!BCrypt.Net.BCrypt.Verify(changePasswordModel.PreviousPassword, baseEntity.PasswordHash))
+                throw new ArgumentException();
+
+            baseEntity.PasswordHash = BCrypt.Net.BCrypt.HashPassword(changePasswordModel.Password);
+
+            var result = Repository.Update(baseEntity);
             return result;
         }
 

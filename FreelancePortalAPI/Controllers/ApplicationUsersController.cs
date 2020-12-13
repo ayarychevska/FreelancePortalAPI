@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models.ApplicationUsers;
@@ -12,7 +13,8 @@ using Services.Services.ApplicationUsers;
 
 namespace FreelancePortalAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("api/application-users")]
     [ApiController]
     public class ApplicationUsersController : ControllerBase
     {
@@ -27,9 +29,13 @@ namespace FreelancePortalAPI.Controllers
             Mapper = mapper;
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<ActionResult<ViewModel>> Create([FromBody] CreateModel createModel)
         {
+            if (!createModel.Password.Equals(createModel.RepeatPassword))
+                return BadRequest("Password not match");
+
             var result = ApplicationUsersService.Create(createModel);
 
             ViewModel userViewModel = Mapper.Map<ViewModel>(result);
@@ -45,18 +51,45 @@ namespace FreelancePortalAPI.Controllers
             return Ok(Mapper.Map<List<ViewModel>>(users));
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CreateModel>> GetUserById([FromRoute] string id)
+        {
+            var user = Repository.GetSingleOrDefault(x => x.Id == id);
+            if (user == null)
+                return NotFound();
+            return Ok(Mapper.Map<CreateModel>(user));
+        }
+
         [HttpPut]
-        public async Task<ActionResult<ViewModel>> Update([FromBody] CreateModel createModel)
+        public async Task<ActionResult<CreateModel>> Update([FromBody] CreateModel createModel)
         {
             var result = ApplicationUsersService.Update(createModel);
 
-            ViewModel userViewModel = Mapper.Map<ViewModel>(result);
+            CreateModel userViewModel = Mapper.Map<CreateModel>(result);
 
             return Ok(userViewModel);
         }
 
+        [HttpPut("password")]
+        public async Task<ActionResult<CreateModel>> UpdatePassword([FromBody] ChangePasswordModel changePasswordModel)
+        {
+            if (!changePasswordModel.Password.Equals(changePasswordModel.RepeatedPassword))
+                return BadRequest("Password not match");
+
+            try
+            {
+                var result = ApplicationUsersService.ChangePassword(changePasswordModel);
+                CreateModel userViewModel = Mapper.Map<CreateModel>(result);
+                return Ok(userViewModel);
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Previous password is not correct");
+            }
+        }
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute]string id)
+        public async Task<ActionResult> Delete([FromRoute] string id)
         {
             var user = Repository.GetSingleOrDefault(x => x.Id == id);
             if (user == null)
