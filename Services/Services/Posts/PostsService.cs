@@ -1,7 +1,10 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Services.Models.Posts;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Services.Services.Posts
 {
@@ -14,6 +17,33 @@ namespace Services.Services.Posts
             Post post = Mapper.Map<Post>(createModel);
 
             var result = Repository.Add(post);
+            return result;
+        }
+
+        public List<Post> GetMyPosts(string id)
+        {
+            return Repository
+                .FindQuery(x => x.UserId == id)
+                .Include(s => s.User)
+                .Include(m => m.Subject)
+                .ToList();
+        }
+
+        public Post GetPostViewModel(long id)
+        {
+            return Repository
+                .FindQuery(x => x.Id == id)
+                .Include(s => s.User)
+                .Include(m => m.Subject)
+                .SingleOrDefault();
+        }
+
+        public Post UpdateStatus(long id, int status)
+        {
+            var entity = Repository.GetSingleOrDefault(x => x.Id == id);
+            entity.Status = status;
+
+            var result = Repository.Update(entity);
             return result;
         }
 

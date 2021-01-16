@@ -38,8 +38,24 @@ namespace FreelancePortalAPI.Controllers
             return Ok(postViewModel);
         }
 
+        [HttpGet("my-posts")]
+        public async Task<ActionResult<List<ViewModel>>> GetMyPosts([FromQuery]string userId)
+        {
+            var myPosts = PostsService.GetMyPosts(userId);
+
+            return Ok(Mapper.Map<List<ViewModel>>(myPosts));
+        }
+
+        [HttpGet("{id}/view")]
+        public async Task<ActionResult<ViewModel>> GetPostViewModel([FromRoute] long id)
+        {
+            var post = PostsService.GetPostViewModel(id);
+
+            return Ok(Mapper.Map<ViewModel>(post));
+        }
+
         [HttpGet("list")]
-        public async Task<ActionResult<List<CreateModel>>> GetUsers()
+        public async Task<ActionResult<List<CreateModel>>> GetPosts()
         {
             var posts = Repository.GetAll();
 
@@ -47,7 +63,7 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreateModel>> GetPostById([FromRoute] int id)
+        public async Task<ActionResult<CreateModel>> GetPostById([FromRoute] long id)
         {
             var post = Repository.GetSingleOrDefault(x => x.Id == id);
             if (post == null)
@@ -65,8 +81,18 @@ namespace FreelancePortalAPI.Controllers
             return Ok(postViewModel);
         }
 
+        [HttpPut("{id}/set-status")]
+        public async Task<ActionResult<CreateModel>> UpdateStatus([FromRoute] long id, [FromQuery] int status)
+        {
+            var result = PostsService.UpdateStatus(id, status);
+
+            CreateModel postViewModel = Mapper.Map<CreateModel>(result);
+
+            return Ok(postViewModel);
+        }
+
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete([FromRoute] int id)
+        public async Task<ActionResult> Delete([FromRoute] long id)
         {
             var post = Repository.GetSingleOrDefault(x => x.Id == id);
             if (post == null)
