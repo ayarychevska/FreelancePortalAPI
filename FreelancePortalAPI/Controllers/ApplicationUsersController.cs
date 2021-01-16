@@ -44,20 +44,47 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<ViewModel>>> GetUsers()
+        public async Task<ActionResult<List<ListViewModel>>> GetUsers()
         {
             var users = Repository.GetAll();
 
-            return Ok(Mapper.Map<List<ViewModel>>(users));
+            return Ok(Mapper.Map<List<ListViewModel>>(users));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreateModel>> GetUserById([FromRoute] string id)
+        public async Task<ActionResult<ViewModel>> GetUserById([FromRoute] string id)
         {
-            var user = Repository.GetSingleOrDefault(x => x.Id == id);
-            if (user == null)
+            try
+            {
+                var user = ApplicationUsersService.GetUderById(id);
+                return Ok(Mapper.Map<ViewModel>(user));
+            }
+            catch (NullReferenceException)
+            {
                 return NotFound();
-            return Ok(Mapper.Map<CreateModel>(user));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{id}/raw")]
+        public async Task<ActionResult<CreateModel>> GetUserByIdRaw([FromRoute] string id)
+        {
+            try
+            {
+                var user = ApplicationUsersService.GetUderById(id);
+                return Ok(Mapper.Map<CreateModel>(user));
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]

@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Services.Models.ApplicationUsers;
 using Services.Models.Login;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
@@ -15,16 +17,19 @@ namespace Services.Services.ApplicationUsers
     public class ApplicationUsersService : BaseService<ApplicationUser>
     {
         private readonly IConfiguration Configuration;
+        private UsersSubjectsService UsersSubjectsService; 
 
-        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper, IConfiguration configuration) : base(repository, mapper)
+        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper, IConfiguration configuration, UsersSubjectsService usersSubjectsService) : base(repository, mapper)
         {
             Configuration = configuration;
+            UsersSubjectsService = usersSubjectsService;
         }
 
         public ApplicationUser Create(CreateModel createModel)
         {
             ApplicationUser applicationUser = Mapper.Map<ApplicationUser>(createModel);
 
+            applicationUser.Login = applicationUser.UserName;
             applicationUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(createModel.Password);
 
             var result = Repository.Add(applicationUser);
@@ -33,11 +38,22 @@ namespace Services.Services.ApplicationUsers
 
         public ApplicationUser Update(CreateModel createModel)
         {
-            var baseEntity = Repository.GetSingleOrDefault(x => x.Id == createModel.Id); 
+            var baseEntity = Repository.FindQuery(x => x.Id == createModel.Id).Include(x => x.UsersSubjects).SingleOrDefault();
             ApplicationUser applicationUser = Mapper.Map(createModel, baseEntity);
+
+            UsersSubjectsService.EraseUserSubjects(createModel.Id);
+            UsersSubjectsService.AddUserSubjects(createModel.Id, createModel.SubjectsIds.ToArray());
 
             var result = Repository.Update(applicationUser);
             return result;
+        }
+
+        public ApplicationUser GetUderById(string id)
+        {
+            var user = Repository.FindQuery(x => x.Id == id).Include(x => x.UsersSubjects).ThenInclude(x => x.Subject).SingleOrDefault();
+            if (user == null)
+                throw new NullReferenceException();
+            return user;
         }
 
         public ApplicationUser ChangePassword(ChangePasswordModel changePasswordModel)

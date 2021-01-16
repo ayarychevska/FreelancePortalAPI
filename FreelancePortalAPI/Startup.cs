@@ -23,6 +23,7 @@ using Services.Services.Appointments;
 using Services.Services.Posts;
 using Services.Services.Reviews;
 using Services.Services.Messages;
+using Services.Services;
 
 namespace FreelancePortalAPI
 {
@@ -61,6 +62,7 @@ namespace FreelancePortalAPI
             services.AddScoped<PostsService, PostsService>();
             services.AddScoped<ReviewsService, ReviewsService>();
             services.AddScoped<MessagesService, MessagesService>();
+            services.AddScoped<UsersSubjectsService, UsersSubjectsService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(options =>
