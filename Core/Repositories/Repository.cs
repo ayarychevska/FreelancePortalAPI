@@ -28,6 +28,7 @@ namespace Core.Repositories
         public virtual void AddRange(IEnumerable<TEntity> entities)
         {
             _entities.AddRange(entities);
+            _context.SaveChanges();
         }
 
 
@@ -54,6 +55,7 @@ namespace Core.Repositories
         public virtual void RemoveRange(IEnumerable<TEntity> entities)
         {
             _entities.RemoveRange(entities);
+            _context.SaveChanges();
         }
 
 
@@ -65,12 +67,31 @@ namespace Core.Repositories
 
         public virtual IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
         {
+            return _entities.Where(predicate).AsEnumerable();
+        }
+
+        public virtual IQueryable<TEntity> FindQuery(Expression<Func<TEntity, bool>> predicate)
+        {
             return _entities.Where(predicate);
         }
 
         public virtual TEntity GetSingleOrDefault(Expression<Func<TEntity, bool>> predicate)
         {
-            return _entities.SingleOrDefault(predicate);
+            return _entities
+                .SingleOrDefault(predicate);
+        }
+
+        public virtual TEntity GetSingleOrDefaultInclude(Expression<Func<TEntity, bool>> predicate, params Expression<Func<TEntity, object>>[] includes)
+        {
+            var query = _entities
+                .Where(predicate);
+
+            foreach (var include in includes)
+            {
+                query.Include(include);
+            }
+
+            return query.SingleOrDefault();
         }
 
         public virtual TEntity Get(int id)

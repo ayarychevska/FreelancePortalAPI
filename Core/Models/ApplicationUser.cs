@@ -16,6 +16,7 @@ namespace Core.Models
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
         public string Description { get; set; }
+        public ICollection<UsersSubjects> UsersSubjects { get; set; }
         //public virtual ICollection<Review> Reviews { get; set; }
         //public virtual ICollection<Appointment> Appointments { get; set; }
         //public virtual ICollection<Post> Posts { get; set; }
