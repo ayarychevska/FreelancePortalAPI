@@ -56,7 +56,7 @@ namespace FreelancePortalAPI.Controllers
         {
             try
             {
-                var user = ApplicationUsersService.GetUderById(id);
+                var user = ApplicationUsersService.GetUserById(id);
                 return Ok(Mapper.Map<ViewModel>(user));
             }
             catch (NullReferenceException)
@@ -74,7 +74,7 @@ namespace FreelancePortalAPI.Controllers
         {
             try
             {
-                var user = ApplicationUsersService.GetUderById(id);
+                var user = ApplicationUsersService.GetUserById(id);
                 return Ok(Mapper.Map<CreateModel>(user));
             }
             catch (NullReferenceException)

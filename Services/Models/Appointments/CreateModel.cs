@@ -6,6 +6,7 @@ namespace Services.Models.Appointments
     public class CreateModel
     {
         public long Id { get; set; }
+        public string Title { get; set; }
         public DateTime StartDateUTC { get; set; }
         public DateTime EndDateUTC { get; set; }
         public string TeacherId { get; set; }

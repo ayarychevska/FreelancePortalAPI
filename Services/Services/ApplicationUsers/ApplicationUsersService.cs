@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -17,10 +18,12 @@ namespace Services.Services.ApplicationUsers
     public class ApplicationUsersService : BaseService<ApplicationUser>
     {
         private readonly IConfiguration Configuration;
-        private UsersSubjectsService UsersSubjectsService; 
+        private UsersSubjectsService UsersSubjectsService;
+        protected readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ApplicationUsersService(IRepository<ApplicationUser> repository, IMapper mapper, IConfiguration configuration, UsersSubjectsService usersSubjectsService) : base(repository, mapper)
+        public ApplicationUsersService(IRepository<ApplicationUser> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration configuration, UsersSubjectsService usersSubjectsService) : base(repository, mapper)
         {
+            _httpContextAccessor = httpContextAccessor;
             Configuration = configuration;
             UsersSubjectsService = usersSubjectsService;
         }
@@ -48,7 +51,8 @@ namespace Services.Services.ApplicationUsers
             return result;
         }
 
-        public ApplicationUser GetUderById(string id)
+        //I want to die
+        public ApplicationUser GetUserById(string id)
         {
             var user = Repository.FindQuery(x => x.Id == id).Include(x => x.UsersSubjects).ThenInclude(x => x.Subject).SingleOrDefault();
             if (user == null)
@@ -76,8 +80,9 @@ namespace Services.Services.ApplicationUsers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, userInfo.UserName),
+                new Claim(ClaimTypes.Actor, userInfo.Id),
                 new Claim("fullName", userInfo.UserName.ToString()),
-                new Claim("role", userInfo.UserType),
+                new Claim(ClaimTypes.Role, userInfo.UserType),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             };
 
@@ -105,6 +110,16 @@ namespace Services.Services.ApplicationUsers
             }
 
             return user;
+        }
+
+        public bool IsTeacher()
+        {
+            if (_httpContextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(claims => claims.Type == ClaimTypes.Role).Value == "student")
+                return false;
+            if (_httpContextAccessor?.HttpContext?.User?.Claims?.FirstOrDefault(claims => claims.Type == ClaimTypes.Role).Value == "teacher")
+                return true;
+            else
+                throw new NullReferenceException();
         }
     }
 }

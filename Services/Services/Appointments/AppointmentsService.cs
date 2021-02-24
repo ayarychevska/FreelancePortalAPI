@@ -1,13 +1,24 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Services.Models.Appointments;
+using Services.Services.ApplicationUsers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Services.Services.Appointments
 {
+
     public class AppointmentsService : BaseService<Appointment>
     {
-        public AppointmentsService(IRepository<Appointment> repository, IMapper mapper) : base(repository, mapper) { }
+        private ApplicationUsersService _applicationUsersService;
+
+        public AppointmentsService(IRepository<Appointment> repository, IMapper mapper, ApplicationUsersService applicationUsersService) : base(repository, mapper)
+        {
+            _applicationUsersService = applicationUsersService;
+        }
 
         public Appointment Create(CreateModel createModel)
         {
@@ -25,5 +36,46 @@ namespace Services.Services.Appointments
             var result = Repository.Update(appointment);
             return result;
         }
+
+        public List<Appointment> GetMyAppointments(string userId)
+        {
+            if (!_applicationUsersService.IsTeacher())
+                return Repository
+                    .FindQuery(x => x.StudentId == userId)
+                    .Include(y => y.Student)
+                    .Include(s => s.Subject)
+                    .Include(m => m.Teacher)
+                    .ToList();
+            if (_applicationUsersService.IsTeacher())
+                return Repository
+                    .FindQuery(x => x.TeacherId == userId)
+                    .Include(y => y.Student)
+                    .Include(s => s.Subject)
+                    .Include(m => m.Teacher)
+                    .ToList();
+            else
+                throw new NullReferenceException();
+        }
+
+        public List<Appointment> GetCalendarAppointments(string userId)
+        {
+            if (!_applicationUsersService.IsTeacher())
+                return Repository
+                    .FindQuery(x => x.StudentId == userId)
+                    .Include(y => y.Student)
+                    .Include(s => s.Subject)
+                    .Include(m => m.Teacher)
+                    .ToList();
+            if (_applicationUsersService.IsTeacher())
+                return Repository
+                    .FindQuery(x => x.TeacherId == userId)
+                    .Include(y => y.Student)
+                    .Include(s => s.Subject)
+                    .Include(m => m.Teacher)
+                    .ToList();
+            else
+                throw new NullReferenceException();
+        }
+
     }
 }

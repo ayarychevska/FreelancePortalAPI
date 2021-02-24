@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models.Appointments;
+using Services.Services.ApplicationUsers;
 using Services.Services.Appointments;
 
 namespace FreelancePortalAPI.Controllers
@@ -22,40 +23,70 @@ namespace FreelancePortalAPI.Controllers
         private IMapper Mapper;
         private IRepository<Appointment> Repository { get; }
         private AppointmentsService AppointmentsService { get; }
+        private ApplicationUsersService ApplicationUsersService;
 
-        public AppointmentsController(IRepository<Appointment> repository, AppointmentsService appointmentsService, IMapper mapper)
+        public AppointmentsController(IRepository<Appointment> repository, AppointmentsService appointmentsService, IMapper mapper, ApplicationUsersService applicationUsersService)
         {
             Repository = repository;
             AppointmentsService = appointmentsService;
             Mapper = mapper;
+            ApplicationUsersService = applicationUsersService;
         }
 
         [HttpPost]
-        public async Task<ActionResult<ViewModel>> Create([FromBody] CreateModel createModel)
+        public async Task<ActionResult<CreateModel>> Create([FromBody] CreateModel createModel)
         {
             var result = AppointmentsService.Create(createModel);
 
-            ViewModel appointmentViewModel = Mapper.Map<ViewModel>(result);
+            CreateModel appointmentCreateModel = Mapper.Map<CreateModel>(result);
 
-            return Ok(appointmentViewModel);
+            return Ok(appointmentCreateModel);
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<ViewModel>>> GetAppointments()
+        public async Task<ActionResult<ListViewModel>> GetAppointments([FromQuery] string userId)
         {
-            var appointments = Repository.GetAll();
+            try
+            {
+                var appointments = AppointmentsService.GetMyAppointments(userId);
+                return Ok(new ListViewModel { IsTeacher = ApplicationUsersService.IsTeacher(), ViewModels = Mapper.Map<List<ViewModel>>(appointments) });
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-            return Ok(Mapper.Map<List<ViewModel>>(appointments));
+        [HttpGet("calendar")]
+        public async Task<ActionResult<CalendarListViewModel>> GetCalendarAppointments([FromQuery] string userId)
+        {
+            try
+            {
+                var appointments = AppointmentsService.GetCalendarAppointments(userId);
+                return Ok(new CalendarListViewModel { IsTeacher = ApplicationUsersService.IsTeacher(), ViewModels = Mapper.Map<List<CalendarViewModel>>(appointments) });
+            }
+            catch (NullReferenceException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPut]
-        public async Task<ActionResult<ViewModel>> Update([FromBody] CreateModel createModel)
+        public async Task<ActionResult<CreateModel>> Update([FromBody] CreateModel createModel)
         {
             var result = AppointmentsService.Update(createModel);
 
-            ViewModel appointmentViewModel = Mapper.Map<ViewModel>(result);
+            CreateModel appointmentCreateModel = Mapper.Map<CreateModel>(result);
 
-            return Ok(appointmentViewModel);
+            return Ok(appointmentCreateModel);
         }
 
         [HttpDelete("{id}")]
