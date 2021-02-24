@@ -55,11 +55,11 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<CreateModel>>> GetPosts()
+        public async Task<ActionResult<List<ViewModel>>> GetPosts()
         {
-            var posts = Repository.GetAll();
+            var posts = PostsService.GetList();
 
-            return Ok(Mapper.Map<List<CreateModel>>(posts));
+            return Ok(Mapper.Map<List<ViewModel>>(posts));
         }
 
         [HttpGet("{id}")]

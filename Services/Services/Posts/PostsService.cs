@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Services.Enums;
 using Services.Models.Posts;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,15 @@ namespace Services.Services.Posts
         {
             return Repository
                 .FindQuery(x => x.UserId == id)
+                .Include(s => s.User)
+                .Include(m => m.Subject)
+                .ToList();
+        }
+
+        public List<Post> GetList()
+        {
+            return Repository
+                .FindQuery(x => x.Status == (int)PostStatus.Published)
                 .Include(s => s.User)
                 .Include(m => m.Subject)
                 .ToList();
