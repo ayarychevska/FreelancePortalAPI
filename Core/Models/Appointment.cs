@@ -7,6 +7,7 @@ namespace Core.Models
     public class Appointment : IAuditableEntity
     {
         public long Id { get; set; }
+        public string Title { get; set; }
         public DateTime StartDateUTC { get; set; }
         public DateTime EndDateUTC { get; set; }
         [ForeignKey("Teacher")]
