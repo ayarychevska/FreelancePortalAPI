@@ -64,6 +64,8 @@ namespace FreelancePortalAPI
             services.AddScoped<MessagesService, MessagesService>();
             services.AddScoped<UsersSubjectsService, UsersSubjectsService>();
 
+            services.AddHttpContextAccessor();
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(options =>
             {

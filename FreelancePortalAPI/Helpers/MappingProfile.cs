@@ -47,6 +47,39 @@ namespace FreelancePortalAPI.Helpers
             CreateMap<Post, Services.Models.Posts.ViewModel>()
                 .ForMember(d => d.SubjectTitle, s => s.MapFrom(m => m.Subject.Title))
                 .ForMember(d => d.UserName, s => s.MapFrom(m => m.User.UserName));
+
+            //Review mappings
+            CreateMap<Review, Services.Models.Reviews.CreateModel>();
+
+            CreateMap<Services.Models.Reviews.CreateModel, Review>()
+                .ForMember(d => d.Reviewer, s => s.Ignore())
+                .ForMember(d => d.ReviewingUser, s => s.Ignore());
+
+            CreateMap<Review, Services.Models.Reviews.ViewModel>()
+                .ForMember(d => d.ReviewerName, s => s.MapFrom(m => m.Reviewer.UserName))
+                .ForMember(d => d.ReviewingUserName, s => s.MapFrom(m => m.ReviewingUser.UserName));
+
+            //Appointment mappings
+            CreateMap<Appointment, Services.Models.Appointments.CreateModel>();
+
+            CreateMap<Services.Models.Appointments.CreateModel, Appointment>()
+                .ForMember(d => d.Student, s => s.Ignore())
+                .ForMember(d => d.Teacher, s => s.Ignore())
+                .ForMember(d => d.Subject, s => s.Ignore());
+
+            CreateMap<Appointment, Services.Models.Appointments.ViewModel>()
+                .ForMember(d => d.Date, s => s.Ignore())
+                .ForMember(d => d.TimeRange, s => s.Ignore())
+                .ForMember(d => d.StudentName, s => s.MapFrom(m => m.Student.UserName))
+                .ForMember(d => d.TeacherName, s => s.MapFrom(m => m.Teacher.UserName))
+                .ForMember(d => d.SubjectTitle, s => s.MapFrom(m => m.Subject.Title));
+
+            CreateMap<Appointment, Services.Models.Appointments.CalendarViewModel>()
+                .ForMember(d => d.Start, s => s.MapFrom(m => m.StartDateUTC.ToString("yyyy-MM-dd HH:mm")))
+                .ForMember(d => d.End, s => s.MapFrom(m => m.EndDateUTC.ToString("yyyy-MM-dd HH:mm")))
+                .ForMember(d => d.StudentName, s => s.MapFrom(m => m.Student.UserName))
+                .ForMember(d => d.TeacherName, s => s.MapFrom(m => m.Teacher.UserName))
+                .ForMember(d => d.SubjectTitle, s => s.MapFrom(m => m.Subject.Title));
         }
     }
 }
