@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models.Appointments;
+using Services.Models.Common;
 using Services.Services.ApplicationUsers;
 using Services.Services.Appointments;
 
@@ -33,6 +34,15 @@ namespace FreelancePortalAPI.Controllers
             ApplicationUsersService = applicationUsersService;
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<CreateModel>> GetAppointmentById([FromRoute] long id)
+        {
+            var appointment = Repository.GetSingleOrDefault(x => x.Id == id);
+            if (appointment == null)
+                return NotFound();
+            return Ok(Mapper.Map<CreateModel>(appointment));
+        }
+
         [HttpPost]
         public async Task<ActionResult<CreateModel>> Create([FromBody] CreateModel createModel)
         {
@@ -44,12 +54,17 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<ListViewModel>> GetAppointments([FromQuery] string userId)
+        public async Task<ActionResult<ListViewModel>> GetAppointments([FromQuery] string userId, [FromQuery] FilterModel filter, [FromQuery] Pager pager)
         {
             try
             {
-                var appointments = AppointmentsService.GetMyAppointments(userId);
-                return Ok(new ListViewModel { IsTeacher = ApplicationUsersService.IsTeacher(), ViewModels = Mapper.Map<List<ViewModel>>(appointments) });
+                var appointments = AppointmentsService.GetMyAppointments(userId, filter, pager);
+                return Ok(new ListViewModel
+                {
+                    Pager = pager,
+                    IsTeacher = ApplicationUsersService.IsTeacher(),
+                    ViewModels = Mapper.Map<List<ViewModel>>(appointments)
+                });
             }
             catch (NullReferenceException)
             {

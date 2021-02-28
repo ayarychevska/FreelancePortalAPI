@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Services.Models.Appointments;
+using Services.Models.Common;
 using Services.Services.ApplicationUsers;
 using System;
 using System.Collections.Generic;
@@ -37,45 +39,55 @@ namespace Services.Services.Appointments
             return result;
         }
 
-        public List<Appointment> GetMyAppointments(string userId)
+        public List<Appointment> GetMyAppointments(string userId, FilterModel filter, Pager pager)
         {
+            #region Filter
+
+            var predicate = PredicateBuilder.New<Appointment>(false);
+
             if (!_applicationUsersService.IsTeacher())
-                return Repository
-                    .FindQuery(x => x.StudentId == userId)
-                    .Include(y => y.Student)
-                    .Include(s => s.Subject)
-                    .Include(m => m.Teacher)
-                    .ToList();
-            if (_applicationUsersService.IsTeacher())
-                return Repository
-                    .FindQuery(x => x.TeacherId == userId)
-                    .Include(y => y.Student)
-                    .Include(s => s.Subject)
-                    .Include(m => m.Teacher)
-                    .ToList();
+                predicate.And(x => x.StudentId == userId);
             else
-                throw new NullReferenceException();
+                predicate.And(x => x.TeacherId == userId);
+
+            if (filter.SubjectId.HasValue)
+                predicate.And(q => q.SubjectId == filter.SubjectId);
+
+            if (filter.DateFromUTC.HasValue)
+                predicate.And(q => q.StartDateUTC.Date >= filter.DateFromUTC.Value.Date);
+
+            if (filter.DateUntilUTC.HasValue)
+                predicate.And(q => q.EndDateUTC.Date <= filter.DateUntilUTC.Value.Date);
+
+            if (!string.IsNullOrEmpty(filter.Title))
+                predicate.And(q => q.Title.Contains(filter.Title));
+
+            #endregion
+
+            return Repository
+                .FindQuery(predicate)
+                .Include(y => y.Student)
+                .Include(s => s.Subject)
+                .Include(m => m.Teacher)
+                .Paginate(pager)
+                .ToList();
         }
 
         public List<Appointment> GetCalendarAppointments(string userId)
         {
-            if (!_applicationUsersService.IsTeacher())
-                return Repository
-                    .FindQuery(x => x.StudentId == userId)
-                    .Include(y => y.Student)
-                    .Include(s => s.Subject)
-                    .Include(m => m.Teacher)
-                    .ToList();
-            if (_applicationUsersService.IsTeacher())
-                return Repository
-                    .FindQuery(x => x.TeacherId == userId)
-                    .Include(y => y.Student)
-                    .Include(s => s.Subject)
-                    .Include(m => m.Teacher)
-                    .ToList();
-            else
-                throw new NullReferenceException();
-        }
+            var predicate = PredicateBuilder.New<Appointment>(false);
 
+            if (!_applicationUsersService.IsTeacher())
+                predicate.And(x => x.StudentId == userId);
+            else
+                predicate.And(x => x.TeacherId == userId);
+
+            return Repository
+                .FindQuery(predicate)
+                .Include(y => y.Student)
+                .Include(s => s.Subject)
+                .Include(m => m.Teacher)
+                .ToList();
+        }
     }
 }

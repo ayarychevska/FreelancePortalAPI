@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Services.Models.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace Services.Models.Appointments
     public class ListViewModel
     {
         public bool IsTeacher { get; set; }
+        public Pager Pager { get; set; }
         public IEnumerable<ViewModel> ViewModels { get; set; }
     }
 }
