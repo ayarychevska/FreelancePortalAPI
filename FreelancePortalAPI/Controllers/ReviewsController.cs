@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Services.Reviews;
 using Services.Models.Reviews;
+using Services.Models.Common;
 
 namespace FreelancePortalAPI.Controllers
 {
@@ -39,11 +40,15 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("user-reviews/{userId}")]
-        public async Task<ActionResult<List<ViewModel>>> GetReviewsForUser([FromRoute] string userId)
+        public async Task<ActionResult<List<ViewModel>>> GetReviewsForUser([FromRoute] string userId, [FromQuery] Pager pager)
         {
-            var reviewsForUser = ReviewsService.GetReviewsForUser(userId);
+            var reviewsForUser = ReviewsService.GetReviewsForUser(userId, pager);
 
-            return Ok(Mapper.Map<List<ViewModel>>(reviewsForUser));
+            return Ok(new ListViewModel
+            {
+                Pager = pager,
+                Reviews = Mapper.Map<List<ViewModel>>(reviewsForUser)
+            });
         }
 
         [HttpPut]

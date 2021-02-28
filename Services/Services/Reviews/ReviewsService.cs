@@ -2,6 +2,7 @@
 using Core.Models;
 using Core.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Services.Models.Common;
 using Services.Models.Reviews;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,13 +21,14 @@ namespace Services.Services.Reviews
             return result;
         }
 
-        public List<Review> GetReviewsForUser(string id)
+        public List<Review> GetReviewsForUser(string id, Pager pager)
         {
             return Repository
                 .FindQuery(x => x.ReviewingUserId == id)
                 .Include(s => s.ReviewingUser)
                 .Include(m => m.Reviewer)
                 .OrderByDescending(x => x.DatePostedUTC)
+                .Paginate(pager)
                 .ToList();
         }
 
