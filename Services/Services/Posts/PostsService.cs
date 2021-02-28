@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Services.Enums;
+using Services.Models.Common;
 using Services.Models.Posts;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,21 +23,62 @@ namespace Services.Services.Posts
             return result;
         }
 
-        public List<Post> GetMyPosts(string id)
+        public List<Post> GetMyPosts(string id, FilterModel filter, Pager pager)
         {
+            #region Filter
+
+            var predicate = PredicateBuilder.New<Post>(false);
+
+            if (filter.SubjectId.HasValue)
+                predicate.And(q => q.SubjectId == filter.SubjectId);
+
+            if (filter.DateFromUTC.HasValue)
+                predicate.And(q => q.DateUTC.Date >= filter.DateFromUTC.Value.Date);
+
+            if (filter.DateUntilUTC.HasValue)
+                predicate.And(q => q.DateUTC.Date <= filter.DateUntilUTC.Value.Date);
+
+            if (!string.IsNullOrEmpty(filter.Title))
+                predicate.And(q => q.Title.Contains(filter.Title));
+
+            predicate.And(x => x.UserId == id);
+
+            #endregion
+
             return Repository
-                .FindQuery(x => x.UserId == id)
+                .FindQuery(predicate)
                 .Include(s => s.User)
                 .Include(m => m.Subject)
+                .Paginate(pager)
                 .ToList();
         }
 
-        public List<Post> GetList()
+        public List<Post> GetList(FilterModel filter, Pager pager)
         {
+            #region Filter
+
+            var predicate = PredicateBuilder.New<Post>(false);
+
+            if (filter.SubjectId.HasValue)
+                predicate.And(q => q.SubjectId == filter.SubjectId);
+
+            if (filter.DateFromUTC.HasValue)
+                predicate.And(q => q.DateUTC.Date >= filter.DateFromUTC.Value.Date);
+
+            if (filter.DateUntilUTC.HasValue)
+                predicate.And(q => q.DateUTC.Date <= filter.DateUntilUTC.Value.Date);
+
+            if (!string.IsNullOrEmpty(filter.Title))
+                predicate.And(q => q.Title.Contains(filter.Title));
+
+            predicate.And(q => q.Status == (int)PostStatus.Published);
+            #endregion
+
             return Repository
-                .FindQuery(x => x.Status == (int)PostStatus.Published)
+                .FindQuery(predicate)
                 .Include(s => s.User)
                 .Include(m => m.Subject)
+                .Paginate(pager)
                 .ToList();
         }
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Services.Models.Common;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,5 +16,11 @@ namespace Services.Models.Posts
         public int Status { get; set; }
         public int SubjectId { get; set; }
         public string SubjectTitle { get; set; }
+    }
+
+    public class ListViewModel
+    {
+        public Pager Pager { get; set; }
+        public IEnumerable<ViewModel> ViewModels { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Core.Models;
 using Core.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Services.Models.Common;
 using Services.Models.Posts;
 using Services.Services.Posts;
 
@@ -39,11 +40,15 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("my-posts")]
-        public async Task<ActionResult<List<ViewModel>>> GetMyPosts([FromQuery]string userId)
+        public async Task<ActionResult<List<ViewModel>>> GetMyPosts([FromQuery]string userId, [FromQuery] FilterModel filter, [FromQuery] Pager pager)
         {
-            var myPosts = PostsService.GetMyPosts(userId);
+            var myPosts = PostsService.GetMyPosts(userId, filter, pager);
 
-            return Ok(Mapper.Map<List<ViewModel>>(myPosts));
+            return Ok(new ListViewModel
+            {
+                Pager = pager,
+                ViewModels = Mapper.Map<List<ViewModel>>(myPosts)
+            });
         }
 
         [HttpGet("{id}/view")]
@@ -55,11 +60,15 @@ namespace FreelancePortalAPI.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<ActionResult<List<ViewModel>>> GetPosts()
+        public async Task<ActionResult<List<ViewModel>>> GetPosts([FromQuery] FilterModel filter, [FromQuery] Pager pager)
         {
-            var posts = PostsService.GetList();
+            var posts = PostsService.GetList(filter, pager);
 
-            return Ok(Mapper.Map<List<ViewModel>>(posts));
+            return Ok(new ListViewModel
+            {
+                Pager = pager,
+                ViewModels = Mapper.Map<List<ViewModel>>(posts)
+            });
         }
 
         [HttpGet("{id}")]
