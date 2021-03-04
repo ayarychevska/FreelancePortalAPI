@@ -80,6 +80,18 @@ namespace FreelancePortalAPI.Helpers
                 .ForMember(d => d.StudentName, s => s.MapFrom(m => m.Student.UserName))
                 .ForMember(d => d.TeacherName, s => s.MapFrom(m => m.Teacher.UserName))
                 .ForMember(d => d.SubjectTitle, s => s.MapFrom(m => m.Subject.Title));
+
+            //Messages mappings
+            CreateMap<Message, Services.Models.Messages.CreateModel>();
+
+            CreateMap<Services.Models.Messages.CreateModel, Message>()
+                .ForMember(d => d.Receiver, s => s.Ignore())
+                .ForMember(d => d.Sender, s => s.Ignore());
+
+            CreateMap<Message, Services.Models.Messages.ViewModel>()
+                .ForMember(d => d.SenderName, s => s.MapFrom(m => m.Sender.UserName))
+                .ForMember(d => d.ReceiverName, s => s.MapFrom(m => m.Receiver.UserName));
+
         }
     }
 }
