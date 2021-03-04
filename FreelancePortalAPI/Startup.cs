@@ -1,29 +1,28 @@
 ﻿using AutoMapper;
 using Core;
-using Core.Models;
-using System;
-using System.Reflection;
-using System.IO;
 using Core.Repositories;
 using Core.Repositories.Interfaces;
+using FreelancePortalAPI.Auth;
+using FreelancePortalAPI.Handlers;
 using FreelancePortalAPI.Helpers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Services.Services.ApplicationUsers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using FreelancePortalAPI.Auth;
-using Services.Services.Subjects;
+using Services.Factories;
+using Services.Services;
+using Services.Services.ApplicationUsers;
 using Services.Services.Appointments;
+using Services.Services.Messages;
 using Services.Services.Posts;
 using Services.Services.Reviews;
-using Services.Services.Messages;
-using Services.Services;
+using Services.Services.Subjects;
+using System;
+using System.Text;
 
 namespace FreelancePortalAPI
 {
@@ -63,6 +62,7 @@ namespace FreelancePortalAPI
             services.AddScoped<ReviewsService, ReviewsService>();
             services.AddScoped<MessagesService, MessagesService>();
             services.AddScoped<UsersSubjectsService, UsersSubjectsService>();
+            services.AddSingleton<MessageServiceFactory, MessageServiceFactory>();
 
             services.AddHttpContextAccessor();
 
@@ -96,6 +96,8 @@ namespace FreelancePortalAPI
                 config.AddPolicy(Policies.Admin, Policies.AdminPolicy());
                 config.AddPolicy(Policies.User, Policies.UserPolicy());
             });
+
+            services.AddWebSocketManager();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -132,6 +134,13 @@ namespace FreelancePortalAPI
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "FreelancePortalAPI");
             });
 
+
+            var serviceScopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            var serviceProvider = serviceScopeFactory.CreateScope().ServiceProvider;
+
+            app.UseWebSockets();
+            app.MapWebSocketManager("/ws", serviceProvider.GetService<ChatMessageHandler>());
+            app.UseStaticFiles();
         }
     }
 }

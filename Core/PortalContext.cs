@@ -73,7 +73,7 @@ namespace Core
                 {
                     ((IAuditableEntity)entityEntry.Entity).CreatedDate = DateTime.UtcNow;
                     ((IAuditableEntity)entityEntry.Entity).CreatedBy = _httpContextAccessor?.HttpContext?.User?.Claims?
-                        .FirstOrDefault(claims => claims.Type == ClaimTypes.Actor).Value ?? "MyApp";
+                        .FirstOrDefault(claims => claims.Type == ClaimTypes.Actor)?.Value ?? "MyApp";
                 }
                 else
                 {
@@ -88,7 +88,7 @@ namespace Core
                 // ModifiedAt and ModifiedBy
                 ((IAuditableEntity)entityEntry.Entity).UpdatedDate = DateTime.UtcNow;
                 ((IAuditableEntity)entityEntry.Entity).UpdatedBy = _httpContextAccessor?.HttpContext?.User?.Claims?
-                    .FirstOrDefault(claims => claims.Type == ClaimTypes.Actor).Value ?? "MyApp";
+                    .FirstOrDefault(claims => claims.Type == ClaimTypes.Actor)?.Value ?? "MyApp";
             }
 
             // After we set all the needed properties
