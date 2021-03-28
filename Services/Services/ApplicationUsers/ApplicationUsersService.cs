@@ -9,6 +9,7 @@ using Services.Models.ApplicationUsers;
 using Services.Models.Login;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
@@ -21,7 +22,13 @@ namespace Services.Services.ApplicationUsers
         private UsersSubjectsService UsersSubjectsService;
         protected readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ApplicationUsersService(IRepository<ApplicationUser> repository, IHttpContextAccessor httpContextAccessor, IMapper mapper, IConfiguration configuration, UsersSubjectsService usersSubjectsService) : base(repository, mapper)
+
+        public ApplicationUsersService(IRepository<ApplicationUser> repository,
+                IHttpContextAccessor httpContextAccessor,
+                IMapper mapper,
+                IConfiguration configuration,
+                UsersSubjectsService usersSubjectsService
+            ) : base(repository, mapper)
         {
             _httpContextAccessor = httpContextAccessor;
             Configuration = configuration;
@@ -32,7 +39,6 @@ namespace Services.Services.ApplicationUsers
         {
             ApplicationUser applicationUser = Mapper.Map<ApplicationUser>(createModel);
 
-            applicationUser.Login = applicationUser.UserName;
             applicationUser.PasswordHash = BCrypt.Net.BCrypt.HashPassword(createModel.Password);
 
             var result = Repository.Add(applicationUser);
@@ -90,7 +96,7 @@ namespace Services.Services.ApplicationUsers
                 issuer: Configuration["Jwt:Issuer"],
                 audience: Configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
+                expires: DateTime.Now.AddMinutes(300),
                 signingCredentials: credentials
                 );
             return new JwtSecurityTokenHandler().WriteToken(token);
