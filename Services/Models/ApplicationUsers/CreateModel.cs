@@ -17,6 +17,8 @@ namespace Services.Models.ApplicationUsers
         public string Description { get; set; }
         public string Password { get; set; }
         public string RepeatPassword { get; set; }
+        public string Avatar { get; set; }
         public IEnumerable<long> SubjectsIds { get; set; }
+
     }
 }

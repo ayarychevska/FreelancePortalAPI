@@ -20,7 +20,7 @@ namespace Services.Models.Appointments
         public string SubjectId { get; set; }
         public string SubjectTitle { get; set; }
         public string Date { get { return StartDateUTC.ToString("d MMM yyyy"); } }
-        public string TimeRange { get { return StartDateUTC.ToString("hh:mm") + " - " + EndDateUTC.ToString("hh:mm"); } }
+        public string TimeRange { get { return StartDateUTC.ToString("HH:mm") + " - " + EndDateUTC.ToString("HH:mm"); } }
     }
 
     public class ListViewModel

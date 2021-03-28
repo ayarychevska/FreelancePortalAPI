@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Services.Models.ApplicationUsers.ChangePasswordModel" Collapsed="true">
+    <Position X="16" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAgAAAAA=</HashCode>
+      <FileName>Models\ApplicationUsers\ChangePasswordModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.ApplicationUsers.CreateModel" Collapsed="true">
+    <Position X="10.75" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAiAAAAACAgAACAAAQAAAQAAAAQCAACAAAQAAAAAEA=</HashCode>
+      <FileName>Models\ApplicationUsers\CreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.ApplicationUsers.ListViewModel" Collapsed="true">
+    <Position X="14.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAACAgAACAAAQAAAQAAAAQCAAAAAAQAAAAAAA=</HashCode>
+      <FileName>Models\ApplicationUsers\ListViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.ApplicationUsers.ViewModel" Collapsed="true">
+    <Position X="12.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAACAgAACAAAQAAAQAAAAQCAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\ApplicationUsers\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.CalendarViewModel" Collapsed="true">
+    <Position X="16" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICBAAAACAIAEAAEAAACAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Models\Appointments\CalendarViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.CalendarListViewModel" Collapsed="true">
+    <Position X="17.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Appointments\CalendarViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.CreateModel" Collapsed="true">
+    <Position X="10.75" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACIAACEAAAAEAAAAAACAAAAAAAAAAAAAAAAAACAAA=</HashCode>
+      <FileName>Models\Appointments\CreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.FilterModel" Collapsed="true">
+    <Position X="14.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAEAAAAAAiAAAAAAAAAAIAAAAAAACAAA=</HashCode>
+      <FileName>Models\Appointments\FilterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.ViewModel" Collapsed="true">
+    <Position X="12.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACJAACEAAIAEAAEAIACAAAAAAAAAABAAAAAAACAAA=</HashCode>
+      <FileName>Models\Appointments\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Appointments.ListViewModel" Collapsed="true">
+    <Position X="14.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAACIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Appointments\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Common.Pager" Collapsed="true">
+    <Position X="17.75" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAQgAAAAAAAAAAAAAAAQAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Common\Pager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Common.PagerExtension" Collapsed="true">
+    <Position X="17.75" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Models\Common\Pager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Login.UserModel" Collapsed="true">
+    <Position X="17.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAACAACAQAQAAAAAAA=</HashCode>
+      <FileName>Models\Login\UserModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Messages.CreateModel" Collapsed="true">
+    <Position X="10.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAEAAAAAAAAAAAAAAAAAAABAAAAAAAADAAAAAA=</HashCode>
+      <FileName>Models\Messages\CreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Messages.ViewModel" Collapsed="true">
+    <Position X="12.5" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAEAAAAAAAQAAAAAAAAAAABAACAAAAADQAgAAA=</HashCode>
+      <FileName>Models\Messages\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Posts.CreateModel" Collapsed="true">
+    <Position X="10.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEEAAAAEAAAAAAAAgAAAAQAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\Posts\CreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Posts.FilterModel" Collapsed="true">
+    <Position X="16" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAEAAAAAAiAAAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Posts\FilterModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Posts.ViewModel" Collapsed="true">
+    <Position X="12.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEEAAIAEAAAAAAAAgAAAAAAAAAEQAACAAAAAA=</HashCode>
+      <FileName>Models\Posts\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Posts.ListViewModel" Collapsed="true">
+    <Position X="14.25" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAEAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Posts\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Reviews.CreateModel" Collapsed="true">
+    <Position X="10.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAACAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAAECAAAAAA=</HashCode>
+      <FileName>Models\Reviews\CreateModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Reviews.ViewModel" Collapsed="true">
+    <Position X="12.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>QAACAAAAABAAAAAAoQAAEAAAAAAAAAAAAAAECAAAAAA=</HashCode>
+      <FileName>Models\Reviews\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Reviews.ListViewModel" Collapsed="true">
+    <Position X="14.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Reviews\ViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Models.Subjects.SubjectModel" Collapsed="true">
+    <Position X="10.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Subjects\SubjectModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.ApplicationUsers.ApplicationUsersService" Collapsed="true">
+    <Position X="9" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQACAAIABAAgAAAAAAICAAAAAAAAEAQgAAAAAAAAAA=</HashCode>
+      <FileName>Services\ApplicationUsers\ApplicationUsersService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.Appointments.AppointmentsService" Collapsed="true">
+    <Position X="9" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAABAAAAAAAAAAAAAAAAAAAEAABAAEAAAAAAA=</HashCode>
+      <FileName>Services\Appointments\AppointmentsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.Messages.MessagesService" Collapsed="true">
+    <Position X="9" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAAAAAAAAAAAAAAAAAAAACAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Messages\MessagesService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.Posts.PostsService" Collapsed="true">
+    <Position X="9" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAEAAAAAAAAAAAAAAAAAAgAQEAAAAAAAAAAAAI=</HashCode>
+      <FileName>Services\Posts\PostsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.Reviews.ReviewsService" Collapsed="true">
+    <Position X="9" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAQAAAAAA=</HashCode>
+      <FileName>Services\Reviews\ReviewsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.Subjects.SubjectsService" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\Subjects\SubjectsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.BaseService&lt;T&gt;" Collapsed="true">
+    <Position X="7" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\BaseService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Services.Services.UsersSubjectsService" Collapsed="true">
+    <Position X="9" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\UsersSubjectsService.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Services.Enums.PostStatus" Collapsed="true">
+    <Position X="17.75" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAEAACAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Enums\PostStatusEnum.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

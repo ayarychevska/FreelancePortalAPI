@@ -15,6 +15,7 @@ namespace Services.Models.ApplicationUsers
         public DateTime DateOfBirth { get; set; }
         public string Gender { get; set; }
         public string Description { get; set; }
+        public string Avatar { get; set; }
         public IEnumerable<Subject> Subjects { get; set; }
     }
 }

@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.Models;
 using Core.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models.ApplicationUsers;
@@ -18,15 +21,20 @@ namespace FreelancePortalAPI.Controllers
     [ApiController]
     public class ApplicationUsersController : ControllerBase
     {
-        private IMapper Mapper;
-        private IRepository<ApplicationUser> Repository { get; }
-        private ApplicationUsersService ApplicationUsersService { get; }
+        private readonly IMapper _mapper;
+        private readonly IRepository<ApplicationUser> _repository;
+        private readonly ApplicationUsersService _applicationUsersService;
+        private readonly IWebHostEnvironment _hostEnvironment;
 
-        public ApplicationUsersController(IRepository<ApplicationUser> repository, ApplicationUsersService applicationUsersService, IMapper mapper)
+        public ApplicationUsersController(IRepository<ApplicationUser> repository,
+                ApplicationUsersService applicationUsersService,
+                IMapper mapper,
+                IWebHostEnvironment hostEnvironment)
         {
-            Repository = repository;
-            ApplicationUsersService = applicationUsersService;
-            Mapper = mapper;
+            _repository = repository;
+            _applicationUsersService = applicationUsersService;
+            _mapper = mapper;
+            _hostEnvironment = hostEnvironment;
         }
 
         [AllowAnonymous]
@@ -36,9 +44,9 @@ namespace FreelancePortalAPI.Controllers
             if (!createModel.Password.Equals(createModel.RepeatPassword))
                 return BadRequest("Password not match");
 
-            var result = ApplicationUsersService.Create(createModel);
+            var result = _applicationUsersService.Create(createModel);
 
-            ViewModel userViewModel = Mapper.Map<ViewModel>(result);
+            ViewModel userViewModel = _mapper.Map<ViewModel>(result);
 
             return Ok(userViewModel);
         }
@@ -46,9 +54,9 @@ namespace FreelancePortalAPI.Controllers
         [HttpGet("list")]
         public async Task<ActionResult<List<ListViewModel>>> GetUsers()
         {
-            var users = Repository.GetAll();
+            var users = _repository.GetAll();
 
-            return Ok(Mapper.Map<List<ListViewModel>>(users));
+            return Ok(_mapper.Map<List<ListViewModel>>(users));
         }
 
         [HttpGet("{id}")]
@@ -56,8 +64,8 @@ namespace FreelancePortalAPI.Controllers
         {
             try
             {
-                var user = ApplicationUsersService.GetUserById(id);
-                return Ok(Mapper.Map<ViewModel>(user));
+                var user = _applicationUsersService.GetUserById(id);
+                return Ok(_mapper.Map<ViewModel>(user));
             }
             catch (NullReferenceException)
             {
@@ -74,8 +82,8 @@ namespace FreelancePortalAPI.Controllers
         {
             try
             {
-                var user = ApplicationUsersService.GetUserById(id);
-                return Ok(Mapper.Map<CreateModel>(user));
+                var user = _applicationUsersService.GetUserById(id);
+                return Ok(_mapper.Map<CreateModel>(user));
             }
             catch (NullReferenceException)
             {
@@ -90,9 +98,9 @@ namespace FreelancePortalAPI.Controllers
         [HttpPut]
         public async Task<ActionResult<CreateModel>> Update([FromBody] CreateModel createModel)
         {
-            var result = ApplicationUsersService.Update(createModel);
+            var result = _applicationUsersService.Update(createModel);
 
-            CreateModel userViewModel = Mapper.Map<CreateModel>(result);
+            CreateModel userViewModel = _mapper.Map<CreateModel>(result);
 
             return Ok(userViewModel);
         }
@@ -105,8 +113,8 @@ namespace FreelancePortalAPI.Controllers
 
             try
             {
-                var result = ApplicationUsersService.ChangePassword(changePasswordModel);
-                CreateModel userViewModel = Mapper.Map<CreateModel>(result);
+                var result = _applicationUsersService.ChangePassword(changePasswordModel);
+                CreateModel userViewModel = _mapper.Map<CreateModel>(result);
                 return Ok(userViewModel);
             }
             catch (ArgumentException)
@@ -118,14 +126,75 @@ namespace FreelancePortalAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete([FromRoute] string id)
         {
-            var user = Repository.GetSingleOrDefault(x => x.Id == id);
+            var user = _repository.GetSingleOrDefault(x => x.Id == id);
             if (user == null)
             {
                 return NotFound();
             }
 
-            Repository.Remove(user);
+            _repository.Remove(user);
             return Ok();
+        }
+
+        [HttpPost("{id}/avatar")]
+        public async Task<string> UploadedFile(string id, IFormFile avatar)
+        {
+            string uniqueFileName = null;
+
+            if (avatar != null)
+            {
+                string uploadsFolder = Path.Combine(_hostEnvironment.ContentRootPath, "images");
+                uniqueFileName = Guid.NewGuid().ToString();
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    avatar.CopyTo(fileStream);
+                }
+
+                ApplicationUser targetUser = _applicationUsersService.GetUserById(id);
+                targetUser.Avatar = uniqueFileName;
+
+                _repository.Update(targetUser);
+            }
+
+            return uniqueFileName;
+        }
+
+        [AllowAnonymous]
+        [HttpGet("{fileName}/avatar")]
+        public async Task<FileContentResult> GetImage([FromRoute] string fileName)
+        {
+            byte[] avatar = null;
+
+            string uploadsFolder = Path.Combine(_hostEnvironment.ContentRootPath, "images");
+            string filePath = Path.Combine(uploadsFolder, fileName);
+
+            avatar = ReadFile(filePath);
+
+
+            return File(avatar, "image/jpeg");
+        }
+
+        public static byte[] ReadFile(string filePath)
+        {
+            byte[] buffer;
+            FileStream fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
+            try
+            {
+                int length = (int)fileStream.Length;  // get file length
+                buffer = new byte[length];            // create buffer
+                int count;                            // actual number of bytes read
+                int sum = 0;                          // total number of bytes read
+
+                // read until Read method returns 0 (end of the stream has been reached)
+                while ((count = fileStream.Read(buffer, sum, length - sum)) > 0)
+                    sum += count;  // sum is a buffer offset for next reading
+            }
+            finally
+            {
+                fileStream.Close();
+            }
+            return buffer;
         }
     }
 }

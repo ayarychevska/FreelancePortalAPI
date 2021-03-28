@@ -13,8 +13,10 @@ namespace Services.Models.Reviews
         public int Rate { get; set; }
         public string ReviewerId { get; set; }
         public string ReviewerName { get; set; }
+        public string ReviewerAvatar { get; set; }
         public string ReviewingUserId { get; set; }
         public string ReviewingUserName { get; set; }
+
     }
 
     public class ListViewModel

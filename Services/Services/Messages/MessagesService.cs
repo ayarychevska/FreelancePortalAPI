@@ -66,7 +66,7 @@ namespace Services.Services.Messages
                 lastMessages.Add(messageList.OrderByDescending(x => x.DateTimeSendedUTC).FirstOrDefault(x => (x.ReceiverId == with || x.SenderId == with)));
             }
 
-            return lastMessages;
+            return lastMessages.OrderByDescending(x => x.DateTimeSendedUTC).ToList();
         }
     }
 }

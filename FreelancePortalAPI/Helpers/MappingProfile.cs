@@ -22,8 +22,7 @@ namespace FreelancePortalAPI.Helpers
 
             CreateMap<CreateModel, ApplicationUser>()
                 .ForMember(d => d.UserName, s => s.MapFrom(m => m.Name))
-                .ForMember(d => d.UsersSubjects, s => s.Ignore())
-                .ForMember(d => d.Login, s => s.Ignore());
+                .ForMember(d => d.UsersSubjects, s => s.Ignore());
 
             CreateMap<ApplicationUser, ListViewModel>()
                 .ForMember(d => d.Name, s => s.MapFrom(m => m.UserName));
@@ -57,7 +56,8 @@ namespace FreelancePortalAPI.Helpers
 
             CreateMap<Review, Services.Models.Reviews.ViewModel>()
                 .ForMember(d => d.ReviewerName, s => s.MapFrom(m => m.Reviewer.UserName))
-                .ForMember(d => d.ReviewingUserName, s => s.MapFrom(m => m.ReviewingUser.UserName));
+                .ForMember(d => d.ReviewingUserName, s => s.MapFrom(m => m.ReviewingUser.UserName))
+                .ForMember(d => d.ReviewerAvatar, s => s.MapFrom(m => m.Reviewer.Avatar));
 
             //Appointment mappings
             CreateMap<Appointment, Services.Models.Appointments.CreateModel>();
@@ -90,7 +90,9 @@ namespace FreelancePortalAPI.Helpers
 
             CreateMap<Message, Services.Models.Messages.ViewModel>()
                 .ForMember(d => d.SenderName, s => s.MapFrom(m => m.Sender.UserName))
-                .ForMember(d => d.ReceiverName, s => s.MapFrom(m => m.Receiver.UserName));
+                .ForMember(d => d.ReceiverName, s => s.MapFrom(m => m.Receiver.UserName))
+                .ForMember(d => d.ReceiverAvatar, s => s.MapFrom(m => m.Receiver.Avatar))
+                .ForMember(d => d.SenderAvatar, s => s.MapFrom(m => m.Sender.Avatar));
 
         }
     }
